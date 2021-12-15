@@ -1,0 +1,507 @@
+o         ¿Manejo  de  Impresión  por  pantalla  (echo  y  print),  (var_dump  y  print_r) diferencias? 
+<html>
+ <head>
+  <title>Prueba de PHP</title>
+ </head>
+ <body>
+ <?php echo '<p>Hola Mundo</p>'; ?>
+ </body>
+</html>
+ 
+o         ¿Declaración de variables, constantes, fuerte tipado y débil tipado?, sentencia declare.
+             Booleanos
+Un tipo de variable booleano puede tener valor true(verdadero) o false(falso)
+<?php $bool1 = true; //bool1 es una variable de tipo booleano con valor true $bool2 = false;// $bool2 es una variable de tipo booleano con valor false ?>
+Enteros
+Un entero es un número que pertenece a el conjunto ℤ = {…, -2, -1, 0, 1, 2, …}.
+<?php $entero = 42; echo $entero; $entero = 01; echo $entero; $entero = 0x22; echo $entero; $entero = 0b11;// si mal no me salen las cuentas esto es 3 ?>
+
+String
+Son todas las variables de tipo texto, serie de caracteres de 256 bytes. Desde PHP 7.0 la serie de caracteres puede ser de más de 256 bytes y no parece haber una restricción que moleste
+<?php echo 'echo'; echo "ejemplo con comillas dobles"; ?>
+
+
+o         Tipos de Datos (bool, int, string, float, NaN, null,  object), Array, iterables, Conversión de Datos.
+Variable de tipo Array
+<?php $a = array( "foo" => "bar", "bar" => "foo" ); ?> echo $a['foo'];// devolvera bar echo $a['bar'];//devolvera foo
+Iterables
+<?php function foo(iterable $iterable) { foreach ($iterable as $value) { // ... } } ?>
+
+OBJETOS
+<?php class Casa { private $ventanas = 5; private $puertas = 3; function mostrar() { echo "tengo una casa con $this->ventanas ventanas y $this->puertas puertas"; } public function setVentanas($nro){ $this->vetanas = $nro; } public function setPuertas($nro){ $this->puertas = $nro; } } $miCasa= new Casa; $miCasa->mostrar(); // puede usar las funciones setVentana y setPuertas para setear la cantidad de ventanas y puertas ?>
+o         Arrays Indexados, Asociativos, Multidimensionales, Concatenacion de valores, comentarios y operadores.
+             
+definir un array
+array
+$temporadas=array("primavera", "verano", "otoño", "invierno");
+$miarray=array("Juan",,32,17.5,true);
+
+Leer un array
+  
+$nombreArray[num_elemento
+echo "$temporada[0], $temporada[1], $temporada[2], $temporada[3].";
+
+
+Definir un array por sus elementos
+También podemos definir un array definiendo directamente sus elementos, por ejemplo si escribimos:
+$turnos[0]="mañana";
+$turnos[1]="tarde";
+$turnos[2]="noche";
+Es lo mismo que si hubieramos escrito:
+$turnos= array("mañana","tarde","noche");
+
+o         Declaración de funciones, parámetros por valor, referencia, por defecto, fuerte tipado, argumentos variables, return. 
+                  <?php //Ejemplo funciones aprenderaprogramar.com
+//Declaración de funciones
+function mostrarTexto($texto) {
+echo "<strong>El texto a mostrar es el siguiente: </strong>";
+echo $texto;
+}
+//Fin de declaración de funciones
+mostrarTexto("Me gusta mucho la web de aprenderaprogramar.com");
+?>
+
+------------------------------------------------------------------------------------------------------------	
+<?php // Ejemplo funciones aprenderaprogramar.com
+function operaciones($n1, $n2, $operacion) {
+$resultado = 0;
+if($operacion == "Sumar") {
+$resultado = $n1 + $n2;
+}else if($operacion == "Restar") {
+$resultado = $n1 - $n2;
+}else if($operacion == "Multiplicar") {
+$resultado = $n1 * $n2;
+}
+return $resultado; // Devolver el resultado
+}
+// Llamar a la función operaciones
+$r = operaciones(5, 7, "Sumar");
+echo $r . "<br>";
+// O podemos imprimir directamente
+echo operaciones(15, 8, "Restar");
+?>
+
+o         Sentencias Condicionales (if, else, switch, operador ternario, Null coalesce, Spaceship).
+elseif/else if 
+<?php
+if ($a > $b) {
+    echo "a es mayor que b";
+} elseif ($a == $b) {
+    echo "a es igual que b";
+} else {
+    echo "a es menor que b";
+}
+?>
+------------------------------------------------------
+
+<?php
+
+/* Método incorrecto: */
+if ($a > $b):
+    echo $a." es mayor que ".$b;
+else if ($a == $b): // No compilará
+    echo "La línea anterior provoca un error del interprete.";
+endif;
+
+
+/* Método correcto: */
+if ($a > $b):
+    echo $a." es mayor que ".$b;
+elseif ($a == $b): // Tenga en cuenta la combinación de las palabras.
+    echo $a." igual ".$b;
+else:
+    echo $a." no es ni mayor ni igual a ".$b;
+endif;
+
+?>
+
+o         Sentencias de Captura de Errores (throw, try - catch).
+<?php
+$dsn = 'mysql:dbname=prueba;host=127.0.0.1';
+$usuario = 'usuario';
+$contraseña = 'contraseña';
+
+try {
+    $mbd = new PDO($dsn, $usuario, $contraseña);
+    $mbd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo 'Falló la conexión: ' . $e->getMessage();
+}
+
+?>
+<?php
+$dsn = 'mysql:dbname=prueba;host=127.0.0.1';
+$usuario = 'usuario';
+$contraseña = 'contraseña';
+
+/*
+    El empleo de try/catch en el constructor sigue siendo válido aunque se establezca ERRMODE a WARNING,
+    ya que PDO::__construct siempre lanzará una PDOException si la conexión falla.
+*/
+try {
+    $mbd = new PDO($dsn, $usuario, $contraseña, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
+} catch (PDOException $e) {
+    echo 'Error de conexión: ' . $e->getMessage();
+    exit;
+}
+
+// Esto hará que PDO lance un error de nivel E_WARNING en lugar de una excepción (cuando la tabla no exista)
+$mbd->query("SELECT columna_incorrecta FROM tabla_incorrecta");
+?>
+
+o         Ciclos e Iteraciones (for, foreach, while, do..while, break, continue)
+<?php
+while (condición) {
+... sentencias;
+}
+?>
+
+<?php
+$galletas = 0;
+while ($galletas < 10){
+echo "$galletas, ";
+$galletas++;
+}
+?>
+
+o         Inclusión   de   Archivos   sentencias   include,   requiere,   include_once   y                   GFPI-F-135 V01 requiere_once.o         Manejo de variables en servidor $_POST, $_GET, $_FILES, $_REQUEST, $_SESSION, $_COOKIE.
+vars.php
+<?php
+
+$color = 'verde';
+$fruta = 'manzana';
+
+?>
+
+test.php
+<?php
+
+echo "Una $fruta $color"; // Una
+
+include 'vars.php';
+
+echo "Una $fruta $color"; // Una manzana verde
+
+?>
+Incluyendo dentro de funciones
+<?php
+
+function foo()
+{
+    global $color;
+
+    include 'vars.php';
+
+    echo "Una $fruta $color";
+}
+
+/* vars.php está en el ámbito de foo() así que *
+* $fruta NO está disponible por fuera de éste  *
+* ámbito. $color sí está porque fue declarado *
+* como global.                                 */
+
+foo();                      // Una manzana verde
+echo "Una $fruta $color";   // Una verde
+
+?>
+
+•	POO Definicion de Clases, atributos, métodos, instancias y uso de objetos. 
+para definir una clase se utiliza la palabra reservada class, seguido del nombre de clase y dos llaves, entre las cuales se guardará toda la información del esquema. Esta información se guarda en propiedades (así es como se les llama a las variables dentro de las clases), métodos (funciones dentro de las clases) y constantes.
+El nombre de la clase puede ser cualquier etiqueta válida siempre que no sea una palabra reservada de PHP. Un nombre válido comienza con una letra o guión bajo, seguido de una cantidad arbitraria de letras, números o guiones bajos.
+class NombreClase {
+    // Declaración de una propiedad
+    public $variable = 'Un valor cualquiera';
+    // Declaración de un método
+    public function mostrarVariable(){
+        echo $this->variable;
+    }}
+<?php
+
+//Crear o definir una clase
+class Coche{
+
+    //Variables o atributos
+    var $marca;
+    var $modelo;
+    var $color;
+    var $propietario;
+
+    //Funciones o métodos
+    function setMarca($miMarca){
+
+    $this->marca = $miMarca;
+
+    }
+
+    function getMarca(){
+
+        return $this->marca;
+
+    }
+
+    function setModelo($miModelo){
+
+        $this->modelo = $miModelo;
+
+    }
+
+    function getModelo(){
+
+        return $this->modelo;
+
+    }
+
+    function setColor($miColor){
+
+        $this->color = $miColor;
+
+    }
+
+    function getColor(){
+
+        return $this->color;
+
+    }
+
+    function setPropietario($miPropietario){
+
+        $this->propietario = $miPropietario;
+
+    }
+
+    function getPropietario(){
+
+        return $this->propietario;
+
+    }
+
+}
+
+//Título
+echo "<h1>Ejemplo 1: Definir o instanciar una clase</h1>";
+
+//Instanciar o utilizar una clase
+$coche1 = new Coche;
+$coche2 = new Coche;
+
+//Accedo a las funciones o métodos set() para configurar el coche 1 (opción 1)
+$coche1->setMarca("Wolkswagen");
+$coche1->setModelo("Polo");
+$coche1->setColor("negro");
+$coche1->setPropietario("Rebeca");
+
+//Accedo a las funciones o métodos get() para recuperar la información del coche 1 (opción 1)
+echo "
+        <strong>".$coche1->getPropietario()."</strong> se ha comprado un 
+        <strong>".$coche1->getMarca()." ".$coche1->getModelo()."</strong> de color
+        <strong>".$coche1->getColor()."</strong>.
+";
+
+//Accedo directamente a los atributos para configurar el coche 2 (opción 2)
+$coche2->marca = "Toyota" ;
+$coche2->modelo = "Corolla";
+$coche2->color = "verde";
+$coche2->propietario = "Marcos";
+
+//Accedo directamente a los atributos para recuperar la información del coche 2 (opción 2)
+echo "
+        <strong>".$coche2->propietario."</strong> se ha comprado un 
+        <strong>".$coche2->marca." ".$coche2->modelo."</strong> de color
+        <strong>".$coche2->color."</strong>.
+";
+
+o         Constantes de Clase, Autocarga de Clases.
+<?php
+class MiClase
+{
+    const CONSTANTE = 'valor constante';
+
+    function mostrarConstante() {
+        echo  self::CONSTANTE . "\n";
+    }
+}
+
+echo MiClase::CONSTANTE . "\n";
+
+$nombreclase = "MiClase";
+echo $nombreclase::CONSTANTE . "\n"; 
+$clase = new MiClase();
+$clase->mostrarConstante();
+
+echo $clase::CONSTANTE."\n"; 
+?>
+
+<?php
+spl_autoload_register(function ($nombre_clase) {
+    include $nombre_clase . '.php';
+});
+
+$obj  = new MiClase1();
+$obj2 = new MiClase2();
+?>
+•	Contructores y Destructores.
+
+Utilización de nuevos constructores unificados
+<?php
+class BaseClass {
+   function __construct() {
+       print "En el constructor BaseClass\n";
+   }
+}
+
+class SubClass extends BaseClass {
+   function __construct() {
+       parent::__construct();
+       print "En el constructor SubClass\n";
+   }
+}
+
+class OtherSubClass extends BaseClass {
+    // heredando el constructor BaseClass
+}
+
+// En el constructor BaseClass
+$obj = new BaseClass();
+
+// En el constructor BaseClass
+// En el constructor SubClass
+$obj = new SubClass();
+
+// En el constructor BaseClass
+$obj = new OtherSubClass();
+?>
+
+Destructor
+<?php
+
+class MyDestructableClass
+{
+    function __construct() {
+        print "En el constructor\n";
+    }
+
+    function __destruct() {
+        print "Destruyendo " . __CLASS__ . "\n";
+    }
+}
+
+$obj = new MyDestructableClass();
+
+o  Visibilidad, Privado, Publico y Protegido. 
+<?php
+// Definimos la clase
+class Coche{
+     
+    /* Atributos protected accesibles en clases que hereden de esta */
+    protected $modelo;
+    protected $color;
+    protected $velocidad;
+     
+    /* Constructor, siempre tiene que ser publico */
+    public function __construct($modelo, $color, $velocidad = 0){
+        $this->modelo = $modelo;
+        $this->color = $color;
+        $this->velocidad = $velocidad;
+    }
+     
+    /* Métodos privados solo se pueden llamar dentro esta clase */
+    private function getColor(){
+        return $this->color;
+    }
+     
+    private function setColor($color){
+        $this->color = $color;
+    }
+     
+    private function acelerar(){
+        $this->velocidad++;
+    }
+     
+    private function frenar(){
+        $this->velocidad--;
+    }
+     
+    private function getVelocidad(){
+        return $this->velocidad;
+    }
+     
+    public function mostrarInfo(){
+         
+        // Llamamos a otros métodos
+        $info = "<h1>Información del coche:</h1>";
+        $info.= "Modelo: ".$this->modelo;
+        $info.= "<br/> Color: ".$this->getColor();
+        $info.= "<br/> Velocidad: ".$this->getVelocidad();
+         
+        return $info;
+    }
+}
+?>
+
+•	Herencia, Abstraccion e Interfaces.
+
+// abstract class
+abstract class DataAccess {  public $varAbstract;
+ protected $varHost; // this abstract method confirm need to define in child class
+ abstract function db_connect();  protected function getResultArray(){
+
+  }}	
+
+
+// interfaceinterface class DataInterface {
+  public function insertData($varDataRecord);
+  public function deleteData($varRecordId);}interface class DataFilterInterface {
+  public function getList($varFilter);}
+
+<?php
+    include("clases/persona.php");
+    class Estudiante extends Persona {
+        private $carrera;
+		
+	function Estudiante($nom, $carr) {
+		parent::__construct($nom);
+		$this->carrera = $carr;
+	}
+
+	function  setCarrera($a) {
+		$this->carrera = $a;
+	}
+
+	function  getCarrera() {
+		return $this->carrera;
+	}
+				
+	function daExamen($nomExamen, $nota) {
+		return "Examen de la asignatura <b>".$nomExamen. "</b> dado, con nota <b>".$nota."</b>" ;
+	}
+   }
+?>
+Ahora, modificamos el archivo default.php, como sigue:
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Objetos en PHP</title>
+    </head>
+    <body>
+        <h1>OOP en PHP</h1>
+        <hr><p>
+        <?php
+            include("clases/estudiante.php");
+            $objPersona = new Persona("Giusseppe");
+            echo "El objeto <span style='color:red; font-weight:bold'> objPersona</span> se llama ".
+                 $objPersona->getNombre()."<br>";  
+            $objPersona->Saluda("Buongiorno!"); 
+         ?>
+        </p>
+         <h3>Herencia en PHP</h3> 
+         <hr><p>
+         <?php
+            //Ahora creamos un estudiante
+            $objEstudiante = new Estudiante("Katia","Licenciatura en Turismo");
+            echo "El estudiante " .$objEstudiante->getNombre()." estudia ".$objEstudiante->getCarrera()."<br>";
+            echo $objEstudiante->saluda("Good morning!");
+            echo $objEstudiante->daExamen("Historia", 8);
+        ?></p>
+    </body>
+</html>
